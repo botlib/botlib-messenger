@@ -1,0 +1,46 @@
+{
+  "name": "botlib-messenger",
+  "description": "Facebook Messenger module for BotLib",
+  "version": "0.0.0",
+  "license": "MIT",
+  "author": {
+    "name": "Pilwon Huh",
+    "email": "pilwon@gmail.com"
+  },
+  "homepage": "https://github.com/botlib/botlib-messenger",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/botlib/botlib-line.git"
+  },
+  "keywords": [
+    "fb",
+    "facebook",
+    "messenger",
+    "bot",
+    "botlib",
+    "chat",
+    "chatbot",
+    "ts",
+    "typescript",
+    "module",
+    "plugin",
+    "lib",
+    "library"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "axios": "^0.15.3",
+    "lodash": "^4.17.4"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.52",
+    "@types/node": "^7.0.5",
+    "tslint": "^4.4.2",
+    "tslint-pilwon": "^0.1.7",
+    "typescript": "2.1.6"
+  },
+  "scripts": {
+    "build": "tsc"
+  }
+}
