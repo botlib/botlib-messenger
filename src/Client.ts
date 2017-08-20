@@ -5,6 +5,8 @@ import { UserProfile } from './UserProfile';
 
 const _options = new WeakMap<Client, ClientOptions>();
 
+const GRAPH_API = 'https://graph.facebook.com/v2.10';
+
 export interface ClientOptions {
   pageAccessToken: string;
 }
@@ -17,7 +19,7 @@ export class Client {
   // Send an image using the Send API.
   async sendImageMessage(options: {
     imageURL: string,
-    recipientID: string,
+    recipientId: string,
   }) {
     const payload: SendPayload = {
       message: {
@@ -29,7 +31,7 @@ export class Client {
         },
       },
       recipient: {
-        id: options.recipientID,
+        id: options.recipientId,
       },
     };
     return this._send(payload);
@@ -38,7 +40,7 @@ export class Client {
   // Send a GIF using the Send API.
   async sendGIFMessage(options: {
     imageURL: string,
-    recipientID: string,
+    recipientId: string,
   }) {
     const payload: SendPayload = {
       message: {
@@ -50,7 +52,7 @@ export class Client {
         },
       },
       recipient: {
-        id: options.recipientID,
+        id: options.recipientId,
       },
     };
     return this._send(payload);
@@ -59,7 +61,7 @@ export class Client {
   // Send audio using the Send API.
   async sendAudioMessage(options: {
     audioURL: string,
-    recipientID: string,
+    recipientId: string,
   }) {
     const payload: SendPayload = {
       message: {
@@ -71,7 +73,7 @@ export class Client {
         },
       },
       recipient: {
-        id: options.recipientID,
+        id: options.recipientId,
       },
     };
     return this._send(payload);
@@ -79,7 +81,7 @@ export class Client {
 
   // Send a video using the Send API.
   async sendVideoMessage(options: {
-    recipientID: string,
+    recipientId: string,
     videoURL: string,
   }) {
     const payload: SendPayload = {
@@ -92,7 +94,7 @@ export class Client {
         },
       },
       recipient: {
-        id: options.recipientID,
+        id: options.recipientId,
       },
     };
     return this._send(payload);
@@ -101,7 +103,7 @@ export class Client {
   // Send a file using the Send API.
   async sendFileMessage(options: {
     fileURL: string,
-    recipientID: string,
+    recipientId: string,
   }) {
     const payload: SendPayload = {
       message: {
@@ -113,7 +115,7 @@ export class Client {
         },
       },
       recipient: {
-        id: options.recipientID,
+        id: options.recipientId,
       },
     };
     return this._send(payload);
@@ -122,7 +124,7 @@ export class Client {
   // Send a text message using the Send API.
   async sendTextMessage(options: {
     messageText: string,
-    recipientID: string,
+    recipientId: string,
   }) {
     const payload: SendPayload = {
       message: {
@@ -130,7 +132,7 @@ export class Client {
         text: options.messageText,
       },
       recipient: {
-        id: options.recipientID,
+        id: options.recipientId,
       },
     };
     return this._send(payload);
@@ -138,7 +140,7 @@ export class Client {
 
   // Send a button message using the Send API.
   async sendButtonMessage(options: {
-    recipientID: string,
+    recipientId: string,
   }) {
     const payload: SendPayload = {
       message: {
@@ -167,7 +169,7 @@ export class Client {
         },
       },
       recipient: {
-        id: options.recipientID,
+        id: options.recipientId,
       },
     };
     return this._send(payload);
@@ -176,7 +178,7 @@ export class Client {
   // Send a Structured Message (Generic Message type) using the Send API.
   async sendGenericMessage(options: {
     imageURLs: string[],
-    recipientID: string,
+    recipientId: string,
   }) {
     const payload: SendPayload = {
       message: {
@@ -225,7 +227,7 @@ export class Client {
         },
       },
       recipient: {
-        id: options.recipientID,
+        id: options.recipientId,
       },
     };
     return this._send(payload);
@@ -234,10 +236,10 @@ export class Client {
   // Send a receipt message using the Send API.
   async sendReceiptMessage(options: {
     imageURLs: string[],
-    recipientID: string,
+    recipientId: string,
   }) {
     // Generate a random receipt ID as the API requires a unique ID
-    const receiptID = `order ${Math.floor(Math.random() * 1000)}`;
+    const receiptId = `order ${Math.floor(Math.random() * 1000)}`;
     const payload: SendPayload = {
       message: {
         attachment: {
@@ -278,7 +280,7 @@ export class Client {
                 title: 'Samsung Gear VR',
               },
             ],
-            order_number: receiptID,
+            order_number: receiptId,
             payment_method: 'Visa 1234',
             recipient_name: 'Peter Chang',
             summary: {
@@ -294,7 +296,7 @@ export class Client {
         },
       },
       recipient: {
-        id: options.recipientID,
+        id: options.recipientId,
       },
     };
     return this._send(payload);
@@ -302,7 +304,7 @@ export class Client {
 
   // Send a message with Quick Reply buttons.
   async sendQuickReply(options: {
-    recipientID: string,
+    recipientId: string,
   }) {
     const payload: SendPayload = {
       message: {
@@ -326,7 +328,7 @@ export class Client {
         text: 'What\'s your favorite movie genre?',
       },
       recipient: {
-        id: options.recipientID,
+        id: options.recipientId,
       },
     };
     return this._send(payload);
@@ -334,14 +336,14 @@ export class Client {
 
   // Send a read receipt to indicate the message has been read
   async sendReadReceipt(options: {
-    recipientID: string,
+    recipientId: string,
   }) {
     if (process.env.DEBUG) {
       console.log('Sending a read receipt to mark message as seen');
     }
     const payload: SendPayload = {
       recipient: {
-        id: options.recipientID,
+        id: options.recipientId,
       },
       sender_action: 'mark_seen',
     };
@@ -350,14 +352,14 @@ export class Client {
 
   // Turn typing indicator on
   async sendTypingOn(options: {
-    recipientID: string,
+    recipientId: string,
   }) {
     if (process.env.DEBUG) {
       console.log('Turning typing indicator on');
     }
     const payload: SendPayload = {
       recipient: {
-        id: options.recipientID,
+        id: options.recipientId,
       },
       sender_action: 'typing_on',
     };
@@ -366,14 +368,14 @@ export class Client {
 
   // Turn typing indicator off
   async sendTypingOff(options: {
-    recipientID: string,
+    recipientId: string,
   }) {
     if (process.env.DEBUG) {
       console.log('Turning typing indicator off');
     }
     const payload: SendPayload = {
       recipient: {
-        id: options.recipientID,
+        id: options.recipientId,
       },
       sender_action: 'typing_off',
     };
@@ -383,7 +385,7 @@ export class Client {
   // Send a message with the account linking call-to-action
   async sendAccountLinking(options: {
     authorizeURL: string,
-    recipientID: string,
+    recipientId: string,
   }) {
     const payload: SendPayload = {
       message: {
@@ -402,14 +404,14 @@ export class Client {
         },
       },
       recipient: {
-        id: options.recipientID,
+        id: options.recipientId,
       },
     };
     return this._send(payload);
   }
 
   async getUserProfile(options: {
-    userID: string,
+    userId: string,
   }): Promise<UserProfile> {
     const { pageAccessToken } = _options.get(this);
     const res = await axios({
@@ -417,7 +419,7 @@ export class Client {
       params: {
         access_token: pageAccessToken,
       },
-      url: `https://graph.facebook.com/v2.6/${options.userID}`,
+      url: `${GRAPH_API}/${options.userId}`,
     });
     if (res.status !== 200) {
       throw new Error(`Failed calling Send API ${res.status} ${res.statusText} ${res.data.error}`);
@@ -443,7 +445,7 @@ export class Client {
       params: {
         access_token: pageAccessToken,
       },
-      url: 'https://graph.facebook.com/v2.6/me/messages',
+      url: `${GRAPH_API}/me/messages`,
     };
     if (process.env.DEBUG) {
       console.log(JSON.stringify(req, null, 2));
@@ -454,14 +456,14 @@ export class Client {
       throw new Error(`Failed calling Send API ${res.status} ${res.statusText} ${res.data.error}`);
     }
 
-    const recipientID = res.data.recipient_id;
-    const messageID = res.data.message_id;
+    const recipientId = res.data.recipient_id;
+    const messageId = res.data.message_id;
 
     if (process.env.DEBUG) {
-      if (messageID) {
-        console.log(`Successfully sent message with id ${messageID} to recipient ${recipientID}`);
+      if (messageId) {
+        console.log(`Successfully sent message with id ${messageId} to recipient ${recipientId}`);
       } else {
-        console.log(`Successfully called Send API for recipient ${recipientID}`);
+        console.log(`Successfully called Send API for recipient ${recipientId}`);
       }
     }
   }

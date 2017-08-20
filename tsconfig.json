@@ -5,9 +5,7 @@
     "moduleResolution": "node",
     "declaration": true,
     "noImplicitAny": true,
-    "outDir": "dist"
+    "outDir": "build"
   },
-  "include": [
-    "src/**/*"
-  ]
+  "include": ["src/**/*"]
 }
