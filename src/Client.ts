@@ -414,15 +414,20 @@ export class Client {
     userId: string,
   }): Promise<UserProfile> {
     const { pageAccessToken } = _options.get(this);
-    const res = await axios({
-      method: 'get',
-      params: {
-        access_token: pageAccessToken,
-      },
-      url: `${GRAPH_API}/${options.userId}`,
-    });
-    if (res.status !== 200) {
-      throw new Error(`Failed calling Send API ${res.status} ${res.statusText} ${res.data.error}`);
+    let res;
+    try {
+      res = await axios({
+        method: 'get',
+        params: {
+          access_token: pageAccessToken,
+        },
+        url: `${GRAPH_API}/${options.userId}`,
+      });
+    } catch (err) {
+      if (!err.response) {
+        throw err;
+      }
+      throw new Error(`Failed to get user profile - ${err.response.data.error.message}`);
     }
     return {
       firstName: res.data.first_name,
@@ -450,10 +455,14 @@ export class Client {
     if (process.env.DEBUG) {
       console.log(JSON.stringify(req, null, 2));
     }
-    const res = await axios(req);
-
-    if (res.status !== 200) {
-      throw new Error(`Failed calling Send API ${res.status} ${res.statusText} ${res.data.error}`);
+    let res;
+    try {
+      res = await axios(req);
+    } catch (err) {
+      if (!err.response) {
+        throw err;
+      }
+      throw new Error(`Failed to send - ${err.response.data.error.message}`);
     }
 
     const recipientId = res.data.recipient_id;
