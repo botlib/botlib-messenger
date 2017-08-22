@@ -340,9 +340,9 @@ export class Client {
   async sendReadReceipt(options: {
     recipientId: string,
   }) {
-    if (process.env.DEBUG) {
-      console.log('Sending a read receipt to mark message as seen');
-    }
+    // if (process.env.DEBUG) {
+    //   console.log('Sending a read receipt to mark message as seen');
+    // }
     const payload: SendPayload = {
       recipient: {
         id: options.recipientId,
@@ -356,9 +356,9 @@ export class Client {
   async sendTypingOn(options: {
     recipientId: string,
   }) {
-    if (process.env.DEBUG) {
-      console.log('Turning typing indicator on');
-    }
+    // if (process.env.DEBUG) {
+    //   console.log('Turning typing indicator on');
+    // }
     const payload: SendPayload = {
       recipient: {
         id: options.recipientId,
@@ -372,9 +372,9 @@ export class Client {
   async sendTypingOff(options: {
     recipientId: string,
   }) {
-    if (process.env.DEBUG) {
-      console.log('Turning typing indicator off');
-    }
+    // if (process.env.DEBUG) {
+    //   console.log('Turning typing indicator off');
+    // }
     const payload: SendPayload = {
       recipient: {
         id: options.recipientId,
@@ -454,9 +454,9 @@ export class Client {
       },
       url: `${GRAPH_API}/me/messages`,
     };
-    if (process.env.DEBUG) {
-      console.log(JSON.stringify(req, null, 2));
-    }
+    // if (process.env.DEBUG) {
+    //   console.log(JSON.stringify(req, null, 2));
+    // }
     let res;
     try {
       res = await axios(req);
@@ -470,13 +470,15 @@ export class Client {
     const recipientId = res.data.recipient_id;
     const messageId = res.data.message_id;
 
-    if (process.env.DEBUG) {
-      if (messageId) {
-        console.log(`Successfully sent message with id ${messageId} to recipient ${recipientId}`);
-      } else {
-        console.log(`Successfully called Send API for recipient ${recipientId}`);
-      }
-    }
+    // if (process.env.DEBUG) {
+    //   if (messageId) {
+    //     console.log(`Successfully sent message with id ${messageId} to recipient ${recipientId}`);
+    //   } else {
+    //     console.log(`Successfully called Send API for recipient ${recipientId}`);
+    //   }
+    // }
+
+    return res.data;
   }
 
   protected async _sendNext(payload: SendPayload) {
