@@ -3,9 +3,10 @@ import axios from 'axios';
 import { SendPayload } from './SendPayload';
 import { UserProfile } from './UserProfile';
 
-const _options = new WeakMap<Client, ClientOptions>();
-
 const GRAPH_API = 'https://graph.facebook.com/v2.10';
+
+const _options = new WeakMap<Client, ClientOptions>();
+const _prevSent = new WeakMap<Client, Promise<any>>();
 
 export interface ClientOptions {
   pageAccessToken: string;
@@ -14,6 +15,7 @@ export interface ClientOptions {
 export class Client {
   constructor(options: ClientOptions) {
     _options.set(this, options);
+    _prevSent.set(this, null);
   }
 
   // Send an image using the Send API.
@@ -34,7 +36,7 @@ export class Client {
         id: options.recipientId,
       },
     };
-    return this._send(payload);
+    return this._sendNext(payload);
   }
 
   // Send a GIF using the Send API.
@@ -55,7 +57,7 @@ export class Client {
         id: options.recipientId,
       },
     };
-    return this._send(payload);
+    return this._sendNext(payload);
   }
 
   // Send audio using the Send API.
@@ -76,7 +78,7 @@ export class Client {
         id: options.recipientId,
       },
     };
-    return this._send(payload);
+    return this._sendNext(payload);
   }
 
   // Send a video using the Send API.
@@ -97,7 +99,7 @@ export class Client {
         id: options.recipientId,
       },
     };
-    return this._send(payload);
+    return this._sendNext(payload);
   }
 
   // Send a file using the Send API.
@@ -118,7 +120,7 @@ export class Client {
         id: options.recipientId,
       },
     };
-    return this._send(payload);
+    return this._sendNext(payload);
   }
 
   // Send a text message using the Send API.
@@ -135,7 +137,7 @@ export class Client {
         id: options.recipientId,
       },
     };
-    return this._send(payload);
+    return this._sendNext(payload);
   }
 
   // Send a button message using the Send API.
@@ -172,7 +174,7 @@ export class Client {
         id: options.recipientId,
       },
     };
-    return this._send(payload);
+    return this._sendNext(payload);
   }
 
   // Send a Structured Message (Generic Message type) using the Send API.
@@ -230,7 +232,7 @@ export class Client {
         id: options.recipientId,
       },
     };
-    return this._send(payload);
+    return this._sendNext(payload);
   }
 
   // Send a receipt message using the Send API.
@@ -299,7 +301,7 @@ export class Client {
         id: options.recipientId,
       },
     };
-    return this._send(payload);
+    return this._sendNext(payload);
   }
 
   // Send a message with Quick Reply buttons.
@@ -331,7 +333,7 @@ export class Client {
         id: options.recipientId,
       },
     };
-    return this._send(payload);
+    return this._sendNext(payload);
   }
 
   // Send a read receipt to indicate the message has been read
@@ -347,7 +349,7 @@ export class Client {
       },
       sender_action: 'mark_seen',
     };
-    return this._send(payload);
+    return this._sendNext(payload);
   }
 
   // Turn typing indicator on
@@ -363,7 +365,7 @@ export class Client {
       },
       sender_action: 'typing_on',
     };
-    return this._send(payload);
+    return this._sendNext(payload);
   }
 
   // Turn typing indicator off
@@ -379,7 +381,7 @@ export class Client {
       },
       sender_action: 'typing_off',
     };
-    return this._send(payload);
+    return this._sendNext(payload);
   }
 
   // Send a message with the account linking call-to-action
@@ -407,7 +409,7 @@ export class Client {
         id: options.recipientId,
       },
     };
-    return this._send(payload);
+    return this._sendNext(payload);
   }
 
   async getUserProfile(options: {
@@ -475,5 +477,15 @@ export class Client {
         console.log(`Successfully called Send API for recipient ${recipientId}`);
       }
     }
+  }
+
+  protected async _sendNext(payload: SendPayload) {
+    const prevSent = _prevSent.get(this);
+    if (prevSent) {
+      await prevSent;
+    }
+    const sent = this._send(payload);
+    _prevSent.set(this, sent);
+    return sent;
   }
 }
