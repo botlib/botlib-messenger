@@ -467,8 +467,8 @@ export class Client {
       throw new Error(`Failed to send - ${err.response.data.error.message}`);
     }
 
-    const recipientId = res.data.recipient_id;
-    const messageId = res.data.message_id;
+    // const recipientId = res.data.recipient_id;
+    // const messageId = res.data.message_id;
 
     // if (process.env.DEBUG) {
     //   if (messageId) {
@@ -478,7 +478,7 @@ export class Client {
     //   }
     // }
 
-    return res.data;
+    return payload;
   }
 
   protected async _sendNext(payload: SendPayload) {
